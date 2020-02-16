@@ -12,7 +12,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 }
 
 # Script
-$targetVariable = "Machine";
+$targetVariable = [EnvironmentVariableTarget]::User;
 
 $listVariables = @{
     "V1"="valor1"; 
@@ -23,10 +23,10 @@ foreach($lv in $listVariables.Keys) {
    # Write-Host "${lv} : $($listVariables.Item($lv))";
    $item = [Environment]::GetEnvironmentVariable($lv, $targetVariable);
 
-   if ([String]::IsNullOrWhiteSpace($item)){
+   if ([String]::IsNullOrWhiteSpace($item)) {
        [Environment]::SetEnvironmentVariable($lv, $($listVariables.Item($lv)), $targetVariable);
-   } else {
-        $listVariables.Item($lv) = "${item}; $($listVariables.Item($lv))";
-        [Environment]::SetEnvironmentVariable($lv, $($listVariables.Item($lv)), $targetVariable);
+   } elseif (!$item.Contains($($listVariables.Item($lv)))) {
+        $item = "${item}; $($listVariables.Item($lv))";
+        [Environment]::SetEnvironmentVariable($lv, $item, $targetVariable);
    }
 }
