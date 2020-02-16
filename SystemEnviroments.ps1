@@ -25,5 +25,8 @@ foreach($lv in $listVariables.Keys) {
 
    if ([String]::IsNullOrWhiteSpace($item)){
        [Environment]::SetEnvironmentVariable($lv, $($listVariables.Item($lv)), $targetVariable);
+   } else {
+        $listVariables.Item($lv) = "${item}; $($listVariables.Item($lv))";
+        [Environment]::SetEnvironmentVariable($lv, $($listVariables.Item($lv)), $targetVariable);
    }
 }
